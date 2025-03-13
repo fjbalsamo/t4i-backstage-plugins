@@ -1,10 +1,26 @@
-# [Backstage](https://backstage.io)
+# Tech4Impact 2025
 
-This is your newly scaffolded Backstage App, Good Luck!
+Creating a [Backstage](https://backstage.io) plugins
 
-To start the app, run:
+## Run Instructions
 
 ```sh
+git clone ...
+cd t4i-backstage-plugins
 yarn install
 yarn dev
 ```
+
+## Creating plugin
+
+```sh
+yarn new
+```
+
+### Frontend
+
+choose `frontend-plugin` option and follow the instructions
+
+### Backend
+
+choose `backend-plugin` option and follow the instructions
