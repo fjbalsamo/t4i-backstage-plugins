@@ -8,6 +8,7 @@ import {
 } from '@backstage/core-components';
 import { Grid, Typography } from '@material-ui/core';
 import React from 'react';
+import { ChatContainer } from '../Chat/ChatContainer';
 
 export const RootComponent = () => {
   return (
@@ -29,7 +30,7 @@ export const RootComponent = () => {
             </InfoCard>
           </Grid>
           <Grid item>
-            <h1>Aqui va el contenido del plugin</h1>
+            <ChatContainer />
           </Grid>
         </Grid>
       </Content>
