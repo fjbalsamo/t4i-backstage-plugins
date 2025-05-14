@@ -5,7 +5,6 @@ import {
   Content,
   ContentHeader,
   HeaderLabel,
-  SupportButton,
 } from '@backstage/core-components';
 import { Grid, Typography } from '@material-ui/core';
 import React from 'react';
