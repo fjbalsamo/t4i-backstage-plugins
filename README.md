@@ -18,6 +18,7 @@ To start working with this repository, clone it and install dependencies:
 git clone https://github.com/fjbalsamo/t4i-backstage-plugins.git
 cd t4i-backstage-plugins
 yarn install
+export $(cat .env | xargs) # if you have a .env file
 yarn dev
 ```
 

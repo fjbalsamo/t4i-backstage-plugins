@@ -2,8 +2,6 @@ import React from 'react';
 import {
   Box,
   Button,
-  Card,
-  CardContent,
   IconButton,
   TextField,
   Typography,
@@ -18,7 +16,7 @@ import SendIcon from '@material-ui/icons/Send';
 import ChatIcon from '@material-ui/icons/Chat';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { useChatContainer } from './useChatContainer';
-import { AssistantMessage } from './AssistantMessage';
+import { MdChatMessage } from './MdChatMessage';
 
 export const ChatContainer = () => {
   const [
@@ -92,23 +90,10 @@ export const ChatContainer = () => {
               sx={{
                 p: 1.5,
                 borderRadius: 2,
-                color: 'ActiveBorder',
-                maxWidth: '70%',
+                width: '100%',
               }}
             >
-              {msg.role === 'user' ? (
-                <Card elevation={1}>
-                  <CardContent>
-                    <Typography variant="body2">{msg.content}</Typography>
-                  </CardContent>
-                </Card>
-              ) : (
-                <Card elevation={2}>
-                  <CardContent>
-                    <AssistantMessage message={msg.content} />
-                  </CardContent>
-                </Card>
-              )}
+              <MdChatMessage {...msg} username='fjbalsamo' />
             </Box>
           </Box>
         ))}

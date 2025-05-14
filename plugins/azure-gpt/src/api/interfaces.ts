@@ -1,6 +1,7 @@
 export interface IMessage {
   content: string;
   role: 'user' | 'assistant';
+  timestamp?: number;
 }
 
 export interface AzureGptResponse {

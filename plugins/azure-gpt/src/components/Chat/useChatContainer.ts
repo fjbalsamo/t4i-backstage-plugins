@@ -12,6 +12,7 @@ export const useChatContainer = () => {
     const newMessage: IMessage = {
       role: 'user',
       content: input,
+      timestamp: Date.now(),
     };
 
     setMessages(prevMessages => [...prevMessages, newMessage]);
@@ -20,8 +21,11 @@ export const useChatContainer = () => {
 
   useEffect(() => {
     if (data) {
-        console.log('Data received:', data);
-      const assistantMessages = data.choices.map(choice => choice.message);
+      console.log('Data received:', data);
+      const assistantMessages = data.choices.map(choice => ({
+        ...choice.message,
+        timestamp: Date.now(),
+      }));
       console.log('Assistant messages:', assistantMessages);
       setMessages(messages => [...messages, ...assistantMessages]);
     }
