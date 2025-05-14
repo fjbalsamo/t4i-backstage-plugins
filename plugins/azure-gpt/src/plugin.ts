@@ -1,17 +1,13 @@
 import {
   createApiFactory,
-  createApiRef,
   createPlugin,
   createRoutableExtension,
   fetchApiRef,
 } from '@backstage/core-plugin-api';
 import { rootRouteRef } from './routes';
-import { AzureGptApi } from './api';
+import { AzureGptApi, azureGptApiRef } from './api';
 
 
-const azureGptApiRef = createApiRef<AzureGptApi>({
-  id: 'plugin.azure-gpt.api',
-});
 
 export const azureGptPlugin = createPlugin({
   id: 'azure-gpt',
