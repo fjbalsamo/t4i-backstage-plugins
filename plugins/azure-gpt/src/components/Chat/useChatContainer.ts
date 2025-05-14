@@ -1,35 +1,31 @@
-import { useState } from 'react';
-
-type Message = {
-  sender: 'user' | 'assistant';
-  text: string;
-};
+import { useEffect, useState } from 'react';
+import { useAssistantByProxy } from '../../hooks/Azure.hooks';
+import { IMessage } from '../../api/interfaces';
 
 export const useChatContainer = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<IMessage[]>([]);
   const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
+
+  const { isLoading, data, error } = useAssistantByProxy(messages);
 
   const sendMessage = (input: string) => {
-    const newMessage: Message = {
-      sender: 'user',
-      text: input,
+    const newMessage: IMessage = {
+      role: 'user',
+      content: input,
     };
 
     setMessages(prevMessages => [...prevMessages, newMessage]);
     setInput('');
-
-    // Simulate a response from the assistant
-    setLoading(true);
-    setTimeout(() => {
-      const assistantMessage: Message = {
-        sender: 'assistant',
-        text: `You said: ${input}`,
-      };
-      setMessages(prevMessages => [...prevMessages, assistantMessage]);
-      setLoading(false);
-    }, 1000);
   };
+
+  useEffect(() => {
+    if (data) {
+        console.log('Data received:', data);
+      const assistantMessages = data.choices.map(choice => choice.message);
+      console.log('Assistant messages:', assistantMessages);
+      setMessages(messages => [...messages, ...assistantMessages]);
+    }
+  }, [data]);
 
   const onClickSend = (event: React.MouseEvent<any>) => {
     event.preventDefault();
@@ -55,13 +51,13 @@ export const useChatContainer = () => {
   };
 
   return [
-    { messages, input, loading },
+    { messages, input, loading: isLoading, error },
     {
       onClickSend,
       handleInputChange,
       setInput,
       onKeyDownSend,
-      cleanChat
+      cleanChat,
     },
   ] as const;
 };

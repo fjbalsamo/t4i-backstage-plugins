@@ -51,12 +51,15 @@ proxy:
   #     target: 'https://example.com'
   #     changeOrigin: true
   endpoints:
-    '/azue-gpt':
-      target: https://ai-khatu-assistant-azure.openai.azure.com/openai/deployments/Khatu-GPT/chat/completions?api-version=2024-02-15-preview
+    '/azure-gpt':
+      target: https://ai-khatu-assistant-azure.openai.azure.com/openai/deployments/Khatu-GPT/chat/completions
       allowedMethods: ['POST']
       changeOrigin: true
       headers:
         'api-key': ${AZURE_OPENAI_API_KEY}
+        Content-Type: application/json
+        Accept: application/json
+
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs

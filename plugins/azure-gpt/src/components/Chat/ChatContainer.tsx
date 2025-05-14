@@ -2,6 +2,8 @@ import React from 'react';
 import {
   Box,
   Button,
+  Card,
+  CardContent,
   IconButton,
   TextField,
   Typography,
@@ -9,15 +11,18 @@ import {
   Divider,
   CircularProgress,
   Tooltip,
+  Alert,
+  AlertTitle,
 } from '@mui/material';
 import SendIcon from '@material-ui/icons/Send';
 import ChatIcon from '@material-ui/icons/Chat';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { useChatContainer } from './useChatContainer';
+import { AssistantMessage } from './AssistantMessage';
 
 export const ChatContainer = () => {
   const [
-    { input, messages, loading },
+    { input, messages, loading, error },
     { setInput, onClickSend, onKeyDownSend, cleanChat },
   ] = useChatContainer();
   return (
@@ -37,7 +42,7 @@ export const ChatContainer = () => {
           Chat Asistente
         </Typography>
         {messages.length > 0 && (
-          <Tooltip title="Limpiar Chat" placement='left'>
+          <Tooltip title="Limpiar Chat" placement="left">
             <IconButton onClick={cleanChat}>
               <CancelIcon />
             </IconButton>
@@ -67,12 +72,19 @@ export const ChatContainer = () => {
           </Box>
         )}
 
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            <AlertTitle>{error.name}</AlertTitle>
+            <Typography variant="body2">{error.message}</Typography>
+          </Alert>
+        )}
+
         {messages.map((msg, index) => (
           <Box
             key={index}
             sx={{
               display: 'flex',
-              justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start',
+              justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start',
               mb: 1,
             }}
           >
@@ -80,12 +92,23 @@ export const ChatContainer = () => {
               sx={{
                 p: 1.5,
                 borderRadius: 2,
-                bgcolor: msg.sender === 'user' ? 'secondary.main' : 'grey.300',
                 color: 'ActiveBorder',
                 maxWidth: '70%',
               }}
             >
-              <Typography variant="body2">{msg.text}</Typography>
+              {msg.role === 'user' ? (
+                <Card elevation={1}>
+                  <CardContent>
+                    <Typography variant="body2">{msg.content}</Typography>
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card elevation={2}>
+                  <CardContent>
+                    <AssistantMessage message={msg.content} />
+                  </CardContent>
+                </Card>
+              )}
             </Box>
           </Box>
         ))}

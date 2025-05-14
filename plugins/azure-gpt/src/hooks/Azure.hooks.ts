@@ -9,11 +9,11 @@ export const useAssistantByProxy = (messages: IMessage[]) => {
   const enabled =
     messages.length > 0 && messages[messages.length - 1].role === 'user';
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['assistantResponse', messages],
-    queryFn: () => azureGptApi.askUsingProxy<AzureGptResponse, any>(messages),
+    queryFn: () => azureGptApi.askUsingProxy<AzureGptResponse>(messages),
     enabled,
   });
 
-  return { data, isLoading, error };
+  return { data, isLoading, error, refetch };
 };

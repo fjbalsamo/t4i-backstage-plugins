@@ -9,8 +9,10 @@ import {
 import { Grid, Typography } from '@material-ui/core';
 import React from 'react';
 import { ChatContainer } from '../Chat/ChatContainer';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export const RootComponent = () => {
+  const queryClient = new QueryClient();
   return (
     <Page themeId="tool">
       <Header title="Benvenido a azure-gpt!" subtitle="IA en backstage">
@@ -30,7 +32,9 @@ export const RootComponent = () => {
             </InfoCard>
           </Grid>
           <Grid item>
-            <ChatContainer />
+            <QueryClientProvider client={queryClient}>
+              <ChatContainer />
+            </QueryClientProvider>
           </Grid>
         </Grid>
       </Content>
