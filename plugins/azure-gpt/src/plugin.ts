@@ -15,8 +15,7 @@ export const azureGptPlugin = createPlugin({
 export const AzureGptPage = azureGptPlugin.provide(
   createRoutableExtension({
     name: 'AzureGptPage',
-    component: () =>
-      import('./components/ExampleComponent').then(m => m.ExampleComponent),
+    component: () => import('./components/Root').then(m => m.RootComponent),
     mountPoint: rootRouteRef,
   }),
 );
