@@ -124,3 +124,10 @@ kubernetes:
 permission:
   # setting this to `false` will disable permissions
   enabled: true
+
+
+# Azure OpenAI Backend Configuration
+gpt:
+  # The base URL for the Azure OpenAI service
+  baseUrl: https://ai-khatu-assistant-azure.openai.azure.com/openai/deployments/Khatu-GPT/chat/completions
+  api_key: ${AZURE_OPENAI_API_KEY}

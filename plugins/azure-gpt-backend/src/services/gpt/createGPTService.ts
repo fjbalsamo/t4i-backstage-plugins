@@ -1,5 +1,6 @@
 import { GptService } from './types';
 import { RootConfigService } from '@backstage/backend-plugin-api';
+import fetch from 'node-fetch';
 
 type GptServiceOptions = {
   config: RootConfigService;
@@ -19,26 +20,40 @@ export async function createGptService(
   const api_base = gptConfig?.getOptionalString('api_base') ?? '';
   const api_key = gptConfig?.getOptionalString('api_key');
 
-    if (!api_key) {
-        throw new Error('gpt.api_key is required');
-    }
-
   return {
     async getChatResponse(input) {
-      // Simulate a chat response
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve([
-            {
-              content: `Hello! You said: ${input
-                .map(msg => msg.content)
-                .join(', ')}`,
-              role: 'assistant',
-              timestamp: Date.now(),
-            },
-          ]);
-        }, 1000);
+      if (!api_key) {
+        throw new Error('gpt.api_key is required');
+      }
+      const url = `${api_base}?api-version=${api_version}`;
+      const headers = {
+        'Content-Type': 'application/json',
+        'api-key': api_key,
+      };
+
+      const body = JSON.stringify({
+        messages: input,
+        max_tokens,
+        temperature,
+        top_p,
       });
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body,
+      });
+      if (!response.ok) {
+        throw new Error(
+          `Error: ${response.status} ${
+            response.statusText
+          } ${await response.text()}`,
+        );
+      }
+      const data = await response.json();
+      if (data.error) {
+        throw new Error(`Error: ${data.error.code} ${data.error.message}`);
+      }
+      return data;
     },
   };
 }
