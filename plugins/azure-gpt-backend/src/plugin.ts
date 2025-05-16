@@ -3,8 +3,7 @@ import {
   createBackendPlugin,
 } from '@backstage/backend-plugin-api';
 import { createRouter } from './router';
-import { catalogServiceRef } from '@backstage/plugin-catalog-node/alpha';
-import { createTodoListService } from './services/TodoListService';
+import { createGptService } from './services/gpt';
 
 /**
  * azureGptPlugin backend plugin
@@ -17,22 +16,17 @@ export const azureGptPlugin = createBackendPlugin({
     env.registerInit({
       deps: {
         logger: coreServices.logger,
-        auth: coreServices.auth,
-        httpAuth: coreServices.httpAuth,
         httpRouter: coreServices.httpRouter,
-        catalog: catalogServiceRef,
+        config: coreServices.rootConfig,
       },
-      async init({ logger, auth, httpAuth, httpRouter, catalog }) {
-        const todoListService = await createTodoListService({
-          logger,
-          auth,
-          catalog,
-        });
+      async init({ logger, httpRouter, config }) {
+        logger.info('azure-gpt: Starting plugin...');
 
         httpRouter.use(
           await createRouter({
-            httpAuth,
-            todoListService,
+            service: await createGptService({
+              config,
+            }),
           }),
         );
       },

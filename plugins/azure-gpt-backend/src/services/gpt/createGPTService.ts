@@ -53,7 +53,7 @@ export async function createGptService(
       if (data.error) {
         throw new Error(`Error: ${data.error.code} ${data.error.message}`);
       }
-      return data;
+      return data.choices.map((choice: any) => choice.message)
     },
   };
 }

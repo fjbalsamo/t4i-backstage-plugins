@@ -1,16 +1,12 @@
-import { HttpAuthService } from '@backstage/backend-plugin-api';
-import { InputError } from '@backstage/errors';
 import { z } from 'zod';
 import express from 'express';
 import Router from 'express-promise-router';
-import { TodoListService } from './services/TodoListService/types';
+import { GptService } from './services/gpt/types';
 
 export async function createRouter({
-  httpAuth,
-  todoListService,
+  service,
 }: {
-  httpAuth: HttpAuthService;
-  todoListService: TodoListService;
+  service: GptService;
 }): Promise<express.Router> {
   const router = Router();
   router.use(express.json());
@@ -21,30 +17,37 @@ export async function createRouter({
   //
   // If you want to define a schema for your API we recommend using Backstage's
   // OpenAPI tooling: https://backstage.io/docs/next/openapi/01-getting-started
-  const todoSchema = z.object({
-    title: z.string(),
-    entityRef: z.string().optional(),
-  });
+  const askSchema = z.array(
+    z.object({
+      content: z.string(),
+      role: z.enum(['user', 'assistant']),
+      timestamp: z.number().optional(),
+    }),
+  );
 
-  router.post('/todos', async (req, res) => {
-    const parsed = todoSchema.safeParse(req.body);
-    if (!parsed.success) {
-      throw new InputError(parsed.error.toString());
+  router.post('/ask', async (req, res) => {
+    // Validate the request body against the schema
+    const result = askSchema.safeParse(req.body);
+    if (!result.success) {
+      return res.status(400).json({
+        error: 'Invalid request body',
+        issues: result.error.issues,
+      });
     }
+    const data = result.data;
 
-    const result = await todoListService.createTodo(parsed.data, {
-      credentials: await httpAuth.credentials(req, { allow: ['user'] }),
-    });
+    const response = await service.getChatResponse(data);
 
-    res.status(201).json(result);
-  });
-
-  router.get('/todos', async (_req, res) => {
-    res.json(await todoListService.listTodos());
-  });
-
-  router.get('/todos/:id', async (req, res) => {
-    res.json(await todoListService.getTodo({ id: req.params.id }));
+    return res
+      .status(200)
+      .json([
+        ...data,
+        ...response.map(item => ({
+          ...item,
+          role: 'assistant',
+          timestamp: Date.now(),
+        })),
+      ]);
   });
 
   return router;

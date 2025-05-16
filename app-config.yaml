@@ -129,5 +129,5 @@ permission:
 # Azure OpenAI Backend Configuration
 gpt:
   # The base URL for the Azure OpenAI service
-  baseUrl: https://ai-khatu-assistant-azure.openai.azure.com/openai/deployments/Khatu-GPT/chat/completions
+  api_base: https://ai-khatu-assistant-azure.openai.azure.com/openai/deployments/Khatu-GPT/chat/completions
   api_key: ${AZURE_OPENAI_API_KEY}
