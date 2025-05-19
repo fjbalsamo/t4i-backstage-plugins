@@ -50,6 +50,16 @@ proxy:
   #   '/test':
   #     target: 'https://example.com'
   #     changeOrigin: true
+  endpoints:
+    '/azure-gpt':
+      target: https://ai-khatu-assistant-azure.openai.azure.com/openai/deployments/Khatu-GPT/chat/completions
+      allowedMethods: ['POST']
+      changeOrigin: true
+      headers:
+        'api-key': ${AZURE_OPENAI_API_KEY}
+        Content-Type: application/json
+        Accept: application/json
+
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
@@ -114,3 +124,10 @@ kubernetes:
 permission:
   # setting this to `false` will disable permissions
   enabled: true
+
+
+# Azure OpenAI Backend Configuration
+gpt:
+  # The base URL for the Azure OpenAI service
+  api_base: https://ai-khatu-assistant-azure.openai.azure.com/openai/deployments/Khatu-GPT/chat/completions
+  api_key: ${AZURE_OPENAI_API_KEY}
