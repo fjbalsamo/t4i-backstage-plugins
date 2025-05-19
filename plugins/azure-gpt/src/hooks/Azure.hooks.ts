@@ -17,3 +17,18 @@ export const useAssistantByProxy = (messages: IMessage[]) => {
 
   return { data, isLoading, error, refetch };
 };
+
+export const useAssistantByBackend = (messages: IMessage[]) => {
+  const azureGptApi = useApi(azureGptApiRef);
+
+  const enabled =
+    messages.length > 0 && messages[messages.length - 1].role === 'user';
+
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['assistantResponse', messages],
+    queryFn: () => azureGptApi.askUsingBackend<AzureGptResponse>(messages),
+    enabled,
+  });
+
+  return { data, isLoading, error, refetch };
+};
